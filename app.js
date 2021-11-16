@@ -58,6 +58,9 @@ app.get('/', (req, res)=>{
   res.render('index')
 })
 
+//we're going to need to check for readstream.
+//const readStream - gfs.gfs.createReadStream(file.filename);
+// readstream.pipe(res)
 
 //@route POST /upload
 //@desc Uploads file
