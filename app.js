@@ -67,8 +67,34 @@ app.get('/', (req, res)=>{
 //file is the input name
 app.post('/upload', upload.single('file'), (req, res)=>{
   res.json({file: req.file})
+  res.redirect('/')
 })
 
+//index(array of files)
+app.get('/files', (req, res)=>{
+  gfs.files.find().toArray((err, files)=>{
+    if(!files || files.length === 0){
+      return res.status(404).json({
+        err: 'No files exist'
+      })
+    }
+  return res.json(files)
+})
+})
+
+//show single file
+app.get('/files/:filename', (req, res)=>{
+  gfs.files.findOne({filename: req.params.filename}, (err, file) =>{
+    //check if file exists
+    if(!file || file.length === 0){
+      return res.status(404).json({
+        err: 'No file exist'
+      })
+    }
+    //file exist
+    return res.json(file)
+  })
+})
 
 
 app.listen(PORT, ()=>{
