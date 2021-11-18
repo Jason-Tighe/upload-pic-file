@@ -58,9 +58,7 @@ app.get('/', (req, res)=>{
   res.render('index')
 })
 
-//we're going to need to check for readstream.
-//const readStream - gfs.gfs.createReadStream(file.filename);
-// readstream.pipe(res)
+
 
 //@route POST /upload
 //@desc Uploads file
@@ -93,6 +91,31 @@ app.get('/files/:filename', (req, res)=>{
     }
     //file exist
     return res.json(file)
+  })
+})
+
+
+//get /image/:filename
+//issue is that grifFSBucket needs to be added to fix current issue according to stack https://stackoverflow.com/questions/47845334/typeerror-grid-is-not-a-constructor-mongodb-node-driver
+// display image
+app.get('/image/:filename', (req, res)=>{
+  gfs.files.findOne({filename: req.params.filename}, (err, file) =>{
+    //check if file exists
+    if(!file || file.length === 0){
+      return res.status(404).json({
+        err: 'No file exist'
+      })
+    }
+  //check if image
+  if(file.contentType === 'image/jpg' || file.contentType === 'image/png'){
+    //read output to browser
+    const readstream = gfs.createReadStream(file.filename);
+    readstream.pipe(res)
+  } else {
+    res.status(404).json({
+      err: 'Not an image'
+    })
+    }
   })
 })
 
