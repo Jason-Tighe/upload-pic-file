@@ -14,7 +14,7 @@
         "express": "^4.17.1",
         "gridfs-stream": "^1.1.1",
         "method-override": "^3.0.0",
-        "mongoose": "^6.0.12",
+        "mongoose": "^5.13.5",
         "multer-gridfs-storage": "^5.0.2",
         "nodemon": "^2.0.14"
     }

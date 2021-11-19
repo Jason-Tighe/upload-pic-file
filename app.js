@@ -95,29 +95,33 @@ app.get('/files/:filename', (req, res)=>{
 })
 
 
+//Really not sure wha the issue is, stack doesn't seem to have a solution.
+
 //get /image/:filename
+//changing the mongoose version fixed this? 5.13.5 works
 //issue is that grifFSBucket needs to be added to fix current issue according to stack https://stackoverflow.com/questions/47845334/typeerror-grid-is-not-a-constructor-mongodb-node-driver
 // display image
-app.get('/image/:filename', (req, res)=>{
-  gfs.files.findOne({filename: req.params.filename}, (err, file) =>{
-    //check if file exists
-    if(!file || file.length === 0){
+app.get('/image/:filename', (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    // Check if file
+    if (!file || file.length === 0) {
       return res.status(404).json({
-        err: 'No file exist'
-      })
+        err: 'No file exists'
+      });
     }
-  //check if image
-  if(file.contentType === 'image/jpg' || file.contentType === 'image/png'){
-    //read output to browser
-    const readstream = gfs.createReadStream(file.filename);
-    readstream.pipe(res)
-  } else {
-    res.status(404).json({
-      err: 'Not an image'
-    })
+
+    // Check if image
+    if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
+      // Read output to browser
+      const readstream = gfs.createReadStream(file.filename);
+      readstream.pipe(res);
+    } else {
+      res.status(404).json({
+        err: 'Not an image'
+      });
     }
-  })
-})
+  });
+});
 
 
 app.listen(PORT, ()=>{
