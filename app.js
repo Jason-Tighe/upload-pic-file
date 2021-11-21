@@ -21,7 +21,7 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 
 // Create mongo connection
-const conn = mongoose.createConnection(MONGODB_URI);
+const conn = mongoose.createConnection(MONGODB_URI, {useUnifiedTopology: true, useNewUrlParser: true });
 
 // Init gfs
 let gfs;
@@ -80,6 +80,24 @@ app.get('/files', (req, res)=>{
 })
 })
 
+
+app.get('/', (req, res)=>{
+  gfs.files.find().toArray((err, files)=>{
+    if(!files || files.length === 0){
+      res.render('index', {files: false})
+    } else {
+      files.map(file =>{
+        if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+          file.isImage = true;
+        } else {
+          file.isImage = false
+        }
+      })
+    }
+   res.render('index', {files: files})
+})
+})
+
 //show single file
 app.get('/files/:filename', (req, res)=>{
   gfs.files.findOne({filename: req.params.filename}, (err, file) =>{
@@ -93,9 +111,6 @@ app.get('/files/:filename', (req, res)=>{
     return res.json(file)
   })
 })
-
-
-//Really not sure wha the issue is, stack doesn't seem to have a solution.
 
 //get /image/:filename
 //changing the mongoose version fixed this? 5.13.5 works
@@ -120,6 +135,17 @@ app.get('/image/:filename', (req, res) => {
         err: 'Not an image'
       });
     }
+  });
+});
+
+//delete image
+app.delete('/files/:id', (req, res) => {
+  gfs.remove({ _id: req.params.id, root: 'uploads' }, (err, gridStore) => {
+    if (err) {
+      return res.status(404).json({ err: err });
+    }
+
+    res.redirect('/');
   });
 });
 
