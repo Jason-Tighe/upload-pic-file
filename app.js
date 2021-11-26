@@ -81,13 +81,17 @@ app.get('/files', (req, res)=>{
 })
 
 
+//will have to deploy a version or something so i can then check if i can create QR codes.
+
+//learning that you can't just add the contenttype for word docs and it'll work. Will have to look into this further.
+//Also I'll have to look into writing out differnt ways for contentType so i don't have to add a bunch of "OR" statements
 app.get('/', (req, res)=>{
   gfs.files.find().toArray((err, files)=>{
     if(!files || files.length === 0){
       res.render('index', {files: false})
     } else {
       files.map(file =>{
-        if(file.contentType === 'image/jpeg' || file.contentType === 'image/png'){
+        if(file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'application/pdf' || file.contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
           file.isImage = true;
         } else {
           file.isImage = false
@@ -126,7 +130,7 @@ app.get('/image/:filename', (req, res) => {
     }
 
     // Check if image
-    if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
+    if (file.contentType === 'image/jpeg' || file.contentType === 'image/png' || file.contentType === 'application/pdf' || file.contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       // Read output to browser
       const readstream = gfs.createReadStream(file.filename);
       readstream.pipe(res);
