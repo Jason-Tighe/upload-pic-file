@@ -118,8 +118,7 @@ app.get('/files/:filename', (req, res)=>{
 
 //get /image/:filename
 //changing the mongoose version fixed this? 5.13.5 works
-//issue is that grifFSBucket needs to be added to fix current issue according to stack https://stackoverflow.com/questions/47845334/typeerror-grid-is-not-a-constructor-mongodb-node-driver
-// display image
+// display image/pdf/ not file?
 app.get('/image/:filename', (req, res) => {
   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
     // Check if file
