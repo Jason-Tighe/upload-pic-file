@@ -6,3 +6,6 @@ Finally got it to work, mongoose version was messing things up. Now can recreate
 
 
 should i change from a Cube deisgn to a card layout? should i compromise and do both? Will need to test.
+
+
+Code so far allows me to push and retrieve images and pdf's, but having some issues with regular word docs.
